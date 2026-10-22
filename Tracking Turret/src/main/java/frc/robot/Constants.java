@@ -16,4 +16,43 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class TurretConstants {
+    /** CAN ID of the SPARK MAX driving the Bag motor. */
+    public static final int kMotorCanId = 1;
+
+    /** Flip if a positive output turns the turret counter-clockwise (viewed from above). */
+    public static final boolean kMotorInverted = false;
+
+    /** Bag motors stall hard; keep the current limit low. */
+    public static final int kCurrentLimitAmps = 20;
+  }
+
+  public static class VisionConstants {
+    /** Camera name exactly as shown in the PhotonVision UI. */
+    public static final String kCameraName = "turret_cam";
+
+    /** AprilTag ID to follow. Set to -1 to follow whichever tag PhotonVision picks as best. */
+    public static final int kTargetTagId = -1;
+
+    /** Seconds without a fresh detection before we consider the tag lost. */
+    public static final double kTargetTimeoutSeconds = 0.25;
+  }
+
+  public static class TrackingConstants {
+    /** Motor output (-1..1) per degree of yaw error. Tune this first. */
+    public static final double kP = 0.02;
+
+    /** Optional derivative gain to reduce overshoot. Leave 0 until kP is tuned. */
+    public static final double kD = 0.0;
+
+    /** Yaw error (degrees) inside which the turret holds still. */
+    public static final double kToleranceDegrees = 1.0;
+
+    /** Output clamp so the turret doesn't whip around. */
+    public static final double kMaxOutput = 0.4;
+
+    /** Minimum output to overcome friction/stiction while outside tolerance. */
+    public static final double kMinOutput = 0.05;
+  }
 }
