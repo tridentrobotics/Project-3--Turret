@@ -5,10 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.TalonConstants;
 import frc.robot.commands.TrackTagCommand;
+import frc.robot.subsystems.TalonSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,6 +27,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final TurretSubsystem m_turret = new TurretSubsystem();
   private final VisionSubsystem m_vision = new VisionSubsystem();
+  private final TalonSubsystem m_talon = new TalonSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
