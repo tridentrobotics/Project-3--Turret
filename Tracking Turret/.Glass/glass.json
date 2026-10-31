@@ -1,0 +1,22 @@
+{
+  "NetworkTables": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/PhotonAlerts": "Alerts"
+    },
+    "windows": {
+      "/SmartDashboard/PhotonAlerts": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "4296"
+  }
+}

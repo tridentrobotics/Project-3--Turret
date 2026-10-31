@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
@@ -28,6 +29,16 @@ public class TurretSubsystem extends SubsystemBase {
 
   /** Positive output rotates the turret in the direction of increasing camera yaw (to the right). */
   public void set(double output) {
+    double magnitude = Math.abs(output);
+    double minMove = TurretConstants.kMinMoveOutput;
+    if (magnitude > 0.0 && magnitude < minMove) {
+      // Below the stiction threshold a steady output does nothing, so pulse at the minimum
+      // moving output instead. Average speed scales with the duty cycle.
+      double period = TurretConstants.kPulsePeriodSeconds;
+      double duty = magnitude / minMove;
+      boolean on = (Timer.getFPGATimestamp() % period) < duty * period;
+      output = on ? Math.copySign(minMove, output) : 0.0;
+    }
     m_motor.set(ControlMode.PercentOutput, output);
   }
 

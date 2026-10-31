@@ -24,6 +24,15 @@ public final class Constants {
     /** Flip if a positive output turns the turret counter-clockwise (viewed from above). */
     public static final boolean kMotorInverted = false;
 
+    /**
+     * Smallest steady output that actually turns the turret. Requests below this are pulsed at
+     * this level with a proportional duty cycle. Raise it if the turret doesn't move.
+     */
+    public static final double kMinMoveOutput = 0.12;
+
+    /** Length of one on/off pulse cycle for sub-minimum outputs. */
+    public static final double kPulsePeriodSeconds = 0.2;
+
     /** Bag motors stall hard; keep the current limit low. */
     public static final int kCurrentLimitAmps = 20;
   }
@@ -61,12 +70,12 @@ public final class Constants {
     public static final double kToleranceDegrees = 1.0;
 
     /** Output clamp so the turret doesn't whip around. */
-    public static final double kMaxOutput = 0.1;
+    public static final double kMaxOutput = 0.04;
 
     /** Output (0..1) used to rotate left while searching for a tag. */
     public static final double kSearchOutput = 0.03;
 
     /** Minimum output to overcome friction/stiction while outside tolerance. */
-    public static final double kMinOutput = 0.05;
+    public static final double kMinOutput = 0.03;
   }
 }
