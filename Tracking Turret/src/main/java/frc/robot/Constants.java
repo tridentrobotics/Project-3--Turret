@@ -30,9 +30,6 @@ public final class Constants {
      */
     public static final double kMinMoveOutput = 0.12;
 
-    /** Length of one on/off pulse cycle for sub-minimum outputs. */
-    public static final double kPulsePeriodSeconds = 0.1;
-
     /** Bag motors stall hard; keep the current limit low. */
     public static final int kCurrentLimitAmps = 20;
   }
@@ -54,6 +51,9 @@ public final class Constants {
 
     /** AprilTag ID to follow. Set to -1 to follow whichever tag PhotonVision picks as best. */
     public static final int kTargetTagId = -1;
+
+    /** Yaw (degrees) beyond which the tag counts as being on the left/right of the frame. */
+    public static final double kDirectionMinYawDegrees = 5.0;
 
     /** Seconds without a fresh detection before we consider the tag lost. */
     public static final double kTargetTimeoutSeconds = 0.25;

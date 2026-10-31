@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
@@ -15,6 +14,9 @@ import frc.robot.Constants.TurretConstants;
 /** Open-loop turret: a motor on a Talon SRX rotating the camera about a vertical axis. */
 public class TurretSubsystem extends SubsystemBase {
   private final WPI_TalonSRX m_motor = new WPI_TalonSRX(TurretConstants.kMotorCanId);
+
+  /** Running total of requested duty for sub-minimum outputs; a pulse fires each time it hits 1. */
+  private double m_pulseAccumulator = 0.0;
 
   public TurretSubsystem() {
     m_motor.configFactoryDefault();
@@ -33,11 +35,17 @@ public class TurretSubsystem extends SubsystemBase {
     double minMove = TurretConstants.kMinMoveOutput;
     if (magnitude > 0.0 && magnitude < minMove) {
       // Below the stiction threshold a steady output does nothing, so pulse at the minimum
-      // moving output instead. Average speed scales with the duty cycle.
-      double period = TurretConstants.kPulsePeriodSeconds;
-      double duty = magnitude / minMove;
-      boolean on = (Timer.getFPGATimestamp() % period) < duty * period;
-      output = on ? Math.copySign(minMove, output) : 0.0;
+      // moving output instead. Each pulse lasts one loop; an accumulator fires it often enough
+      // that the average speed scales with magnitude / minMove, regardless of loop timing.
+      m_pulseAccumulator += magnitude / minMove;
+      if (m_pulseAccumulator >= 1.0) {
+        m_pulseAccumulator -= 1.0;
+        output = Math.copySign(minMove, output);
+      } else {
+        output = 0.0;
+      }
+    } else {
+      m_pulseAccumulator = 0.0;
     }
     m_motor.set(ControlMode.PercentOutput, output);
   }

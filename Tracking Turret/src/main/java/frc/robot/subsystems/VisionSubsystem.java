@@ -20,6 +20,9 @@ public class VisionSubsystem extends SubsystemBase {
   private double m_yawDegrees = 0.0;
   private double m_lastSeenSeconds = Double.NEGATIVE_INFINITY;
 
+  /** -1 = tag was last off to the left, +1 = to the right. Defaults to left. */
+  private double m_searchDirection = -1.0;
+
   @Override
   public void periodic() {
     for (PhotonPipelineResult result : m_camera.getAllUnreadResults()) {
@@ -27,6 +30,11 @@ public class VisionSubsystem extends SubsystemBase {
       if (target != null) {
         m_yawDegrees = target.getYaw();
         m_lastSeenSeconds = Timer.getFPGATimestamp();
+        // Only remember a side when the tag was clearly off-center, so a tag that vanishes while
+        // centered keeps the earlier direction instead of a noisy sign.
+        if (Math.abs(m_yawDegrees) >= VisionConstants.kDirectionMinYawDegrees) {
+          m_searchDirection = Math.signum(m_yawDegrees);
+        }
       }
     }
 
@@ -47,6 +55,11 @@ public class VisionSubsystem extends SubsystemBase {
       }
     }
     return null;
+  }
+
+  /** Direction to search after losing the tag: +1 = right, -1 = left (the side it left from). */
+  public double getSearchDirection() {
+    return m_searchDirection;
   }
 
   /**
