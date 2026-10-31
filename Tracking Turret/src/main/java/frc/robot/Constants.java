@@ -18,8 +18,8 @@ public final class Constants {
   }
 
   public static class TurretConstants {
-    /** CAN ID of the SPARK MAX driving the Bag motor. */
-    public static final int kMotorCanId = 1;
+    /** CAN ID of the Talon SRX driving the turret motor. */
+    public static final int kMotorCanId = 12;
 
     /** Flip if a positive output turns the turret counter-clockwise (viewed from above). */
     public static final boolean kMotorInverted = false;
@@ -41,7 +41,7 @@ public final class Constants {
 
   public static class VisionConstants {
     /** Camera name exactly as shown in the PhotonVision UI. */
-    public static final String kCameraName = "turret_cam";
+    public static final String kCameraName = "turret-cam";
 
     /** AprilTag ID to follow. Set to -1 to follow whichever tag PhotonVision picks as best. */
     public static final int kTargetTagId = -1;
@@ -61,7 +61,10 @@ public final class Constants {
     public static final double kToleranceDegrees = 1.0;
 
     /** Output clamp so the turret doesn't whip around. */
-    public static final double kMaxOutput = 0.4;
+    public static final double kMaxOutput = 0.1;
+
+    /** Output (0..1) used to rotate left while searching for a tag. */
+    public static final double kSearchOutput = 0.03;
 
     /** Minimum output to overcome friction/stiction while outside tolerance. */
     public static final double kMinOutput = 0.05;

@@ -4,32 +4,31 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
 
-/** Open-loop turret: a Bag motor on a SPARK MAX rotating the camera about a vertical axis. */
+/** Open-loop turret: a motor on a Talon SRX rotating the camera about a vertical axis. */
 public class TurretSubsystem extends SubsystemBase {
-  private final SparkMax m_motor = new SparkMax(TurretConstants.kMotorCanId, MotorType.kBrushed);
+  private final WPI_TalonSRX m_motor = new WPI_TalonSRX(TurretConstants.kMotorCanId);
 
   public TurretSubsystem() {
-    SparkMaxConfig config = new SparkMaxConfig();
-    config
-        .inverted(TurretConstants.kMotorInverted)
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(TurretConstants.kCurrentLimitAmps);
-    m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_motor.configFactoryDefault();
+    m_motor.setInverted(TurretConstants.kMotorInverted);
+    m_motor.setNeutralMode(NeutralMode.Brake);
+    // Default deadband (4%) would swallow the very slow search output.
+    m_motor.configNeutralDeadband(0.001);
+    m_motor.configSupplyCurrentLimit(
+        new com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration(
+            true, TurretConstants.kCurrentLimitAmps, TurretConstants.kCurrentLimitAmps, 0.0));
   }
 
   /** Positive output rotates the turret in the direction of increasing camera yaw (to the right). */
   public void set(double output) {
-    m_motor.set(output);
+    m_motor.set(ControlMode.PercentOutput, output);
   }
 
   public void stop() {

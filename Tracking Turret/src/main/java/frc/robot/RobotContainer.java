@@ -5,13 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.TalonConstants;
 import frc.robot.commands.TrackTagCommand;
-import frc.robot.subsystems.TalonSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,7 +24,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final TurretSubsystem m_turret = new TurretSubsystem();
   private final VisionSubsystem m_vision = new VisionSubsystem();
-  private final TalonSubsystem m_talon = new TalonSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -49,14 +45,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Spin the Talon SRX at a constant output for as long as the robot is enabled.
-    if (TalonConstants.kSpinWhenEnabled) {
-      new Trigger(DriverStation::isEnabled)
-          .whileTrue(
-              Commands.runEnd(
-                  () -> m_talon.set(TalonConstants.kEnabledOutput), m_talon::stop, m_talon));
-    }
-
     // Track the AprilTag whenever nothing else is using the turret.
     m_turret.setDefaultCommand(new TrackTagCommand(m_turret, m_vision));
 

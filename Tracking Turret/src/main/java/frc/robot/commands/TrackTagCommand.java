@@ -38,8 +38,9 @@ public class TrackTagCommand extends Command {
   public void execute() {
     OptionalDouble yaw = m_vision.getYawDegrees();
     if (yaw.isEmpty()) {
+      // No tag in view: sweep left until one shows up.
       m_pid.reset();
-      m_turret.stop();
+      m_turret.set(-TrackingConstants.kSearchOutput);
       return;
     }
 
