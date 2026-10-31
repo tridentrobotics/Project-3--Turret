@@ -31,7 +31,7 @@ public final class Constants {
     public static final double kMinMoveOutput = 0.12;
 
     /** Length of one on/off pulse cycle for sub-minimum outputs. */
-    public static final double kPulsePeriodSeconds = 0.2;
+    public static final double kPulsePeriodSeconds = 0.1;
 
     /** Bag motors stall hard; keep the current limit low. */
     public static final int kCurrentLimitAmps = 20;
@@ -67,15 +67,15 @@ public final class Constants {
     public static final double kD = 0.0;
 
     /** Yaw error (degrees) inside which the turret holds still. */
-    public static final double kToleranceDegrees = 1.0;
+    public static final double kToleranceDegrees = 1.5;
 
     /** Output clamp so the turret doesn't whip around. */
     public static final double kMaxOutput = 0.04;
 
     /** Output (0..1) used to rotate left while searching for a tag. */
-    public static final double kSearchOutput = 0.03;
+    public static final double kSearchOutput = 0.02;
 
     /** Minimum output to overcome friction/stiction while outside tolerance. */
-    public static final double kMinOutput = 0.03;
+    public static final double kMinOutput = 0.02;
   }
 }
