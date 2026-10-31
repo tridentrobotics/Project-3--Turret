@@ -28,6 +28,14 @@ public final class Constants {
     public static final int kCurrentLimitAmps = 20;
   }
 
+  public static class TalonConstants {
+    /** CAN ID of the Talon SRX. */
+    public static final int kMotorCanId = 12;
+
+    /** Percent output (-1..1) applied while the robot is enabled. */
+    public static final double kEnabledOutput = 0.1;
+  }
+
   public static class VisionConstants {
     /** Camera name exactly as shown in the PhotonVision UI. */
     public static final String kCameraName = "turret_cam";

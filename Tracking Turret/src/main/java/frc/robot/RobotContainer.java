@@ -44,6 +44,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // Spin the Talon SRX at a constant output for as long as the robot is enabled.
+    new Trigger(DriverStation::isEnabled)
+        .whileTrue(
+            Commands.runEnd(
+                () -> m_talon.set(TalonConstants.kEnabledOutput), m_talon::stop, m_talon));
+
     // Track the AprilTag whenever nothing else is using the turret.
     m_turret.setDefaultCommand(new TrackTagCommand(m_turret, m_vision));
 
