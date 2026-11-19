@@ -28,7 +28,7 @@ public final class Constants {
      * Smallest steady output that actually turns the turret. Requests below this are pulsed at
      * this level with a proportional duty cycle. Raise it if the turret doesn't move.
      */
-    public static final double kMinMoveOutput = 0.12;
+    public static final double kMinMoveOutput = 0.08;
 
     /** Bag motors stall hard; keep the current limit low. */
     public static final int kCurrentLimitAmps = 20;
@@ -61,13 +61,19 @@ public final class Constants {
 
   public static class TrackingConstants {
     /** Motor output (-1..1) per degree of yaw error. Tune this first. */
-    public static final double kP = 0.02;
+    public static final double kP = 0.012;
 
     /** Optional derivative gain to reduce overshoot. Leave 0 until kP is tuned. */
     public static final double kD = 0.0;
 
     /** Yaw error (degrees) inside which the turret holds still. */
-    public static final double kToleranceDegrees = 1.5;
+    public static final double kToleranceDegrees = 2.0;
+
+    /**
+     * Once centered, the turret stays still until yaw error exceeds this (degrees). Must be larger
+     * than {@link #kToleranceDegrees}; the gap prevents hunting around the center.
+     */
+    public static final double kReengageDegrees = 3.5;
 
     /** Output clamp so the turret doesn't whip around. */
     public static final double kMaxOutput = 0.04;
@@ -76,6 +82,6 @@ public final class Constants {
     public static final double kSearchOutput = 0.02;
 
     /** Minimum output to overcome friction/stiction while outside tolerance. */
-    public static final double kMinOutput = 0.02;
+    public static final double kMinOutput = 0.01;
   }
 }
