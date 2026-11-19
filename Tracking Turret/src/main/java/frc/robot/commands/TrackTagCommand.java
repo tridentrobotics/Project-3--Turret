@@ -45,6 +45,12 @@ public class TrackTagCommand extends Command {
       // No tag in view: sweep toward the side it was last seen leaving (left if never seen).
       m_pid.reset();
       m_holding = false;
+      // Hit an end of travel: turn the sweep around so the camera cable doesn't wind up.
+      if (m_turret.isForwardLimitHit()) {
+        m_vision.setSearchDirection(-1.0);
+      } else if (m_turret.isReverseLimitHit()) {
+        m_vision.setSearchDirection(1.0);
+      }
       m_turret.set(m_vision.getSearchDirection() * TrackingConstants.kSearchOutput);
       return;
     }

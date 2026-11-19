@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,10 +29,30 @@ public class TurretSubsystem extends SubsystemBase {
     m_motor.configSupplyCurrentLimit(
         new com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration(
             true, TurretConstants.kCurrentLimitAmps, TurretConstants.kCurrentLimitAmps, 0.0));
+    // Limit switches plug into the Talon's data port; the Talon also cuts output in the direction
+    // of a pressed switch on its own.
+    m_motor.configForwardLimitSwitchSource(
+        LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    m_motor.configReverseLimitSwitchSource(
+        LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+  }
+
+  /** True when the limit switch at the positive (right) end of travel is pressed. */
+  public boolean isForwardLimitHit() {
+    return m_motor.isFwdLimitSwitchClosed() == 1;
+  }
+
+  /** True when the limit switch at the negative (left) end of travel is pressed. */
+  public boolean isReverseLimitHit() {
+    return m_motor.isRevLimitSwitchClosed() == 1;
   }
 
   /** Positive output rotates the turret in the direction of increasing camera yaw (to the right). */
   public void set(double output) {
+    // Never drive further into a pressed limit switch (protects the camera cable).
+    if ((output > 0.0 && isForwardLimitHit()) || (output < 0.0 && isReverseLimitHit())) {
+      output = 0.0;
+    }
     double magnitude = Math.abs(output);
     double minMove = TurretConstants.kMinMoveOutput;
     if (magnitude > 0.0 && magnitude < minMove) {
@@ -57,5 +79,7 @@ public class TurretSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Turret/Output", m_motor.get());
+    SmartDashboard.putBoolean("Turret/ForwardLimit", isForwardLimitHit());
+    SmartDashboard.putBoolean("Turret/ReverseLimit", isReverseLimitHit());
   }
 }

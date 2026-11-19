@@ -62,6 +62,11 @@ public class VisionSubsystem extends SubsystemBase {
     return m_searchDirection;
   }
 
+  /** Overrides the search direction, e.g. to turn the sweep around at a turret limit switch. */
+  public void setSearchDirection(double direction) {
+    m_searchDirection = Math.signum(direction);
+  }
+
   /**
    * Yaw to the tracked tag in degrees, positive when the tag is to the right of the camera's
    * centerline. Empty if the tag hasn't been seen recently.
